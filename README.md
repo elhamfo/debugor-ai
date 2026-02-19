@@ -52,6 +52,6 @@ As an AI engineer, I built this to showcase:
 Improvements in progress: Multi-turn memory enhancements, JS AST support, user auth.
 
 ## Contact
-[Elhamfo] - [elham.fo@gmail.com]
+Elham Fo - elham.fo@gmail.com
 
 Open to contributions or discussions on AI engineering!
