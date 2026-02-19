@@ -1,0 +1,18 @@
+# Node.js / Frontend
+frontend/node_modules
+frontend/.vite
+frontend/dist
+frontend/.env
+
+# Python / Backend
+backend/__pycache__
+backend/.env
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
