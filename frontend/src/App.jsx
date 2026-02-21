@@ -166,9 +166,18 @@ function App() {
                     onChange={e => setLlmProvider(e.target.value)}
                     className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
                   >
-                    <option value="ollama">Local (Ollama)</option>
                     <option value="openrouter">OpenRouter (cloud)</option>
+                    
+                    {import.meta.env.VITE_IS_PRODUCTION !== 'true' && (
+                      <option value="ollama">Local (Ollama)</option>
+                    )}
                   </select>
+                  
+                  {llmProvider === 'ollama' && import.meta.env.VITE_IS_PRODUCTION === 'true' && (
+                    <p className="mt-2 text-sm text-amber-700">
+                      Local Ollama is only available in development mode.
+                    </p>
+                  )}
                 </div>
 
                 {llmProvider === 'openrouter' && (
