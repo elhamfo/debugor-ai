@@ -39,7 +39,9 @@ function App() {
         })),
       };
 
-      const res = await axios.post('http://localhost:8000/debug', payload, {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+      const res = await axios.post(`${API_URL}/debug`, payload, {
         timeout: 90000,
       });
 
