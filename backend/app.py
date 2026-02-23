@@ -68,6 +68,18 @@ def get_ast_grounding(code: str) -> str:
 
 @app.post("/debug")
 async def debug_code(req: DebugRequest):
+    #Block Ollama in production
+    disable_ollama = os.getenv("DISABLE_OLLAMA", "false").lower == "true"
+
+    if req.llm_provider == "ollama" and disable_ollama:
+        return {
+            "response": (
+                "Local Ollama mode is not available in this live demo (Railway deployment).\n\n"
+                "Please switch to **OpenRouter (cloud)** for the full experience.\n"
+                "It uses powerful models like GPT-4o or Claude 3.5 without any local setup."
+            )
+        }
+    
     if not req.code.strip():
         raise HTTPException(400, "No code provided")
 
