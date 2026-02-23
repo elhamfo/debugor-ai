@@ -161,26 +161,25 @@ function App() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     LLM Provider
                   </label>
-                  <select
-                    value={llmProvider}
-                    onChange={e => setLlmProvider(e.target.value)}
-                    className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
-                  >
-                    <option value="openrouter">OpenRouter (cloud)</option>
-                    
-                    {import.meta.env.VITE_IS_PRODUCTION !== 'true' && (
-                      <option value="ollama">Local (Ollama)</option>
-                    )}
-                  </select>
-                  
-                  {llmProvider === 'ollama' && import.meta.env.VITE_IS_PRODUCTION === 'true' && (
-                    <p className="mt-2 text-sm text-amber-700">
-                      Local Ollama is only available in development mode.
-                    </p>
+
+                  {import.meta.env.VITE_IS_PRODUCTION === 'true' ? (
+                    <div className="py-3 px-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 font-medium">
+                      Using <strong>OpenRouter (cloud)</strong> — recommended for live demo
+                    </div>
+                  ) : (
+                    <select
+                      value={llmProvider}
+                      onChange={(e) => setLlmProvider(e.target.value)}
+                      className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
+                    >
+                      <option value="ollama">Local (Ollama – dev only)</option>
+                      <option value="openrouter">OpenRouter (cloud)</option>
+                    </select>
                   )}
                 </div>
 
-                {llmProvider === 'openrouter' && (
+                {/* Model input – only show in dev or when OpenRouter selected */}
+                {(llmProvider === 'openrouter' || import.meta.env.VITE_IS_PRODUCTION !== 'true') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Model
@@ -188,8 +187,8 @@ function App() {
                     <input
                       type="text"
                       value={model}
-                      onChange={e => setModel(e.target.value)}
-                      placeholder="e.g. gpt-4o, claude-3.5-sonnet, gemini-1.5-pro..."
+                      onChange={(e) => setModel(e.target.value)}
+                      placeholder="e.g. gpt-4o, claude-3.5-sonnet..."
                       className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
                     />
                   </div>
