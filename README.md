@@ -1,148 +1,67 @@
-# debugor-ai – AI Socratic Debugging Tutor
+## debugor-ai - AI Socratic Debugging Tutor
 
-A full-stack **AI-powered debugging tutor** that uses the **Socratic method** to guide users toward self-discovering and understanding code bugs — without giving direct fixes.
+A full-stack AI-powered debugging tutor that uses the Socratic method to guide users toward self-discovering code bugs. Built as a portfolio project to demonstrate AI engineering expertise, including LLM integration (Ollama/OpenRouter), prompt engineering for educational guidance, hybrid symbolic-neural reasoning (AST parsing + LLM), and responsive UI.
 
-## Features
+#### Features
+**Socratic Tutoring**: LLM prompts designed to ask guiding questions instead of direct fixes, fostering learning.
+**AST-Based Grounding**: Extracts code facts (variables, functions) via Python's ast module for accurate, context-aware responses.
+**Dual LLM Backends**: Supports local Ollama (e.g., Llama 3.2) for privacy/offline use and cloud-based OpenRouter (e.g., GPT-4o/Claude) for advanced models.
+**Interactive Chat UI**: Real-time conversation history, code editor (Monaco), and session management (end/reset).
+**Multi-Language Support**: Focused on Python with AST, extensible to JS/Java/etc.
+**Portfolio Highlights**: Demonstrates full-stack AI (FastAPI backend, React/Vite/Tailwind frontend), error handling, CORS, and deployment readiness.
 
-- **Socratic Tutoring**  
-  Carefully engineered LLM prompts that ask guiding questions to help users reason through bugs themselves
+#### Tech Stack
+**Backend**: FastAPI (API), Ollama/OpenAI clients (LLM), Python AST (grounding), Pydantic (validation).
+**Frontend**: React (UI), Vite (build), Tailwind CSS (styling), Monaco Editor (code highlighting), Axios (API calls).
+**AI Aspects**: Prompt engineering for Socratic dialogue, conversation state management, hybrid AI (symbolic AST + generative LLM).
+**Tools/Deps**: Updated to 2026 standards (e.g., FastAPI 0.129, React 19, Tailwind v4).
 
-- **AST-Based Code Grounding**  
-  Uses Python's `ast` module to extract variables, functions, and structure for context-aware, accurate guidance
+#### Quick Start (Local Development)
 
-- **Dual LLM Backends**  
-  - Local: Ollama (e.g., Llama 3.2) – privacy-focused, offline-capable  
-  - Cloud: OpenRouter (e.g., GPT-4o, Claude 3.5) – powerful, fast models
+##### Prerequisites
 
-- **Interactive Chat UI**  
-  Real-time conversation history, Monaco code editor, session management (start/end/reset)
+Python 3.12+
+Node.js 20+
+Ollama (for local LLM: install from ollama.com, pull a model like ollama pull llama3.2)
+OpenRouter API key (optional, for cloud: sign up at openrouter.ai)
 
-- **Multi-Language Support**  
-  Core support for Python (with AST grounding), easily extensible to JavaScript, Java, etc.
-
-- **Portfolio Highlights**  
-  Demonstrates FastAPI backend, React/Vite/Tailwind frontend, CORS handling, error resilience, and dual deployment (Railway + Netlify)
-
-## Tech Stack
-
-- **Backend**  
-  - FastAPI (API framework)  
-  - Ollama & OpenAI-compatible client (LLM integration)  
-  - Python `ast` module (code analysis & grounding)  
-  - Pydantic (data validation & settings)
-
-- **Frontend**  
-  - React (UI & state management)  
-  - Vite (fast build tool)  
-  - Tailwind CSS (styling)  
-  - Monaco Editor (code highlighting & editing)  
-  - Axios (API communication)
-
-- **AI & Core Concepts**  
-  - Advanced prompt engineering (Socratic dialogue)  
-  - Conversation state management  
-  - Hybrid AI: symbolic (AST parsing) + generative (LLM)
-
-- **Tools & Standards**  
-  Updated to 2026 best practices (FastAPI 0.115+, React 19, Tailwind v4, Python 3.12+)
-
-## Live Demo
-
-- **Frontend (interactive tutor)**: https://debugor-ai.netlify.app  
-- **Backend API Docs (Swagger)**: https://debugor-ai-production.up.railway.app/docs
-
-> Note: Local Ollama mode is available in development only. The live demo uses OpenRouter for reliable performance.
-
-## Quick Start (Local Development)
-
-### Prerequisites
-
-- Python 3.12+
-- Node.js 20+
-- Ollama (optional – for local LLM: install from ollama.com, run `ollama pull llama3.2`)
-- OpenRouter API key (optional – sign up at openrouter.ai)
-
-### Clone & Setup
-
+##### Clone repo
 git clone https://github.com/elhamfo/debugor-ai.git
 cd debugor-ai
 
-#### Backend
+##### Backend
+1. Navigate: cd backend
+2. Create venv: python -m venv env && source env/bin/activate (Unix) or env\Scripts\activate (Windows)
+3. Install deps: pip install -r requirements.txt
+4. Set env: Create .env with OPENROUTER_API_KEY=your_key and OLLAMA_MODEL=llama3.2
+5. Run: uvicorn main:app --reload --port 8000
 
-1. Navigate: `cd backend`
-2. Create virtual environment:  
-   `python -m venv env`  
-   then activate it:  
-   - Unix/macOS: `source env/bin/activate`  
-   - Windows: `env\Scripts\activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Set environment variables:  
-   Create a `.env` file in the `backend` folder with: OPENROUTER_API_KEY=your_openrouter_key_here
+##### Frontend
+1. Navigate: cd frontend
+2. Install deps: npm install
+3. Run: npm run dev (opens at http://localhost:5173)
 
-5. Run the server:  
-`uvicorn app:app --reload --port 8000`
+Test: Submit buggy code + issue; interact via chat. Use "End Session" to reset.
 
-#### Frontend
+#### Deployment 
+**Backend**: Deploy to Render/Railway/Heroku/Fly.io (free tiers). Set env vars for API keys.
+**Frontend**: Deploy to Vercel/Netlify. Update API URL in App.jsx (e.g., via import.meta.env.VITE_API_URL).
 
-1. Navigate: `cd ../frontend` (or open a new terminal in the `frontend` folder)
-2. Install dependencies: `npm install`
-3. Start development server: `npm run dev`  
-→ Opens at http://localhost:5173
+#### Live Demo
+Frontend: https://debugor-ai.netlify.app  
+API Docs: https://debugor-ai-production.up.railway.app/docs
 
-**Test the app locally:**  
-- Open http://localhost:5173 in your browser  
-- Enter buggy code and describe the issue  
-- Interact with the Socratic tutor  
-- Use the "End Session" button to reset and start over
+#### Why This Project?
+As an AI engineer, I built this to showcase:
+**LLM Orchestration**: Seamless switching between local/cloud models with error-resilient prompts.
+**Hybrid AI**: Combining symbolic (AST) and neural (LLM) for grounded, accurate tutoring.
+**Ethical AI Design**: Socratic method promotes user learning over spoon-feeding.
+**Full-Stack Skills**: API design, stateful chat, responsive UI.
+**Security/Best Practices**: CORS, input validation, no hardcoded keys.
 
-### Deployment
+Improvements in progress: Multi-turn memory enhancements, JS AST support, user auth.
 
-- **Backend**: Deployed on Railway (free tier)  
-Live API: https://debugor-ai-production.up.railway.app  
-Interactive docs: https://debugor-ai-production.up.railway.app/docs
+#### Contact
+Elham Fo - elham.fo@gmail.com
 
-- **Frontend**: Deployed on Netlify  
-Live demo: https://debugor-ai.netlify.app
-
-Both services auto-deploy on every push to the `main` branch. Environment variables (API keys, backend URL) are managed securely via each platform's dashboard.
-
-### Live Demo
-
--  **Interactive Tutor (Frontend)**: https://debugor-ai.netlify.app  
--  **API Documentation (Swagger)**: https://debugor-ai-production.up.railway.app/docs
-
-> Note: The live demo uses **OpenRouter** for reliable performance.  
-> Local Ollama mode is only available when running locally.
-
-### Why This Project?
-
-As an AI engineer, I created this project to demonstrate:
-
-- **LLM Orchestration**  
-Seamless switching between local (Ollama) and cloud (OpenRouter) models with robust error handling
-
-- **Hybrid AI Reasoning**  
-Combining symbolic code analysis (AST parsing) with generative LLM capabilities for accurate, context-aware tutoring
-
-- **Ethical & Educational AI**  
-Socratic prompting prioritizes user learning and understanding over simply providing answers
-
-- **Full-Stack Production Skills**  
-Clean API design, stateful chat UI, CORS configuration, environment management, and dual-platform deployment
-
-- **Security & Best Practices**  
-Input validation, no hardcoded secrets, proper CORS, and deployment on free-tier cloud platforms
-
-### Improvements in Progress
-
-- Persistent conversation history (multi-turn memory)  
-- JavaScript and other language AST support  
-- User authentication and saved sessions  
-- Tutor effectiveness metrics and evaluation
-
-### Contact
-
-**Elham Fo**  
-📧 elham.fo@gmail.com  
-
-Open to contributions, feedback, collaborations, and discussions about applied AI engineering, educational AI, LLM applications, and full-stack ML systems!
+Open to contributions or discussions on AI engineering!
