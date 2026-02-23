@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Editor from '@monaco-editor/react';
 
@@ -6,12 +6,20 @@ function App() {
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('python');
   const [initialIssue, setInitialIssue] = useState('');
-  const [llmProvider, setLlmProvider] = useState('ollama');
+  const [llmProvider, setLlmProvider] = useState(
+    import.meta.env.VITE_IS_PRODUCTION === 'true' ? 'openrouter' : 'ollama'
+  );
   const [model, setModel] = useState('gpt-4o');
   const [conversation, setConversation] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionEnded, setSessionEnded] = useState(false);
+
+  useEffect(() => {
+      if (import.meta.env.VITE_IS_PRODUCTION === 'true') {
+        setLlmProvider('openrouter'); // force it every render in prod
+      }
+    }, []); // empty deps = run once on mount
 
   const sendToAI = async (message, isFollowUp = false) => {
     if (!message.trim()) return;
@@ -39,7 +47,9 @@ function App() {
         })),
       };
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+      const isProduction = import.meta.env.VITE_IS_PRODUCTION === 'true'
+
+      const API_URL = isProduction ? import.meta.env.VITE_API_URL ||  'https://debugor-ai-production.up.railway.app' : 'http://localhost:8000'
 
       const res = await axios.post(`${API_URL}/debug`, payload, {
         timeout: 90000,
@@ -157,42 +167,42 @@ function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    LLM Provider
-                  </label>
-
-                  {import.meta.env.VITE_IS_PRODUCTION === 'true' ? (
-                    <div className="py-3 px-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 font-medium">
-                      Using <strong>OpenRouter (cloud)</strong> — recommended for live demo
-                    </div>
-                  ) : (
-                    <select
-                      value={llmProvider}
-                      onChange={(e) => setLlmProvider(e.target.value)}
-                      className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
-                    >
-                      <option value="ollama">Local (Ollama – dev only)</option>
-                      <option value="openrouter">OpenRouter (cloud)</option>
-                    </select>
-                  )}
-                </div>
-
-                {/* Model input – only show in dev or when OpenRouter selected */}
-                {(llmProvider === 'openrouter' || import.meta.env.VITE_IS_PRODUCTION !== 'true') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Model
+                      LLM Provider
                     </label>
-                    <input
-                      type="text"
-                      value={model}
-                      onChange={(e) => setModel(e.target.value)}
-                      placeholder="e.g. gpt-4o, claude-3.5-sonnet..."
-                      className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
-                    />
+
+                    {import.meta.env.VITE_IS_PRODUCTION === 'true' ? (
+                      <div className="py-3 px-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 font-medium">
+                        Using <strong>OpenRouter (cloud)</strong> — recommended for live demo
+                      </div>
+                    ) : (
+                      <select
+                        value={llmProvider}
+                        onChange={(e) => setLlmProvider(e.target.value)}
+                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
+                      >
+                        <option value="ollama">Local (Ollama – dev only)</option>
+                        <option value="openrouter">OpenRouter (cloud)</option>
+                      </select>
+                    )}
                   </div>
-                )}
+
+                  {/* Model field – only show when OpenRouter is used */}
+                  {llmProvider === 'openrouter' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Model
+                      </label>
+                      <input
+                        type="text"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                        placeholder="e.g. gpt-4o, claude-3.5-sonnet..."
+                        className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 px-4 text-gray-800"
+                      />
+                    </div>
+                  )}
               </div>
 
               <button
